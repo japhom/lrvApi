@@ -19,4 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::get('boards','boardsController@index');
-Route::any('saveItem/{board}/{data}','boardsController@saveItem');
+Route::post('saveItem/{board}/{data}','boardsController@saveItem');
+Route::post('deleteItem/{board}/{item}','boardsController@deleteItem');
+Route::post('addBoard/{board}','boardsController@addBoard');
+Route::post('deleteBoard/{board}','boardsController@deleteBoard');

@@ -23,7 +23,7 @@ class boardsController extends Controller
             i.id AS ItemId,
             i.name as ItemName
         FROM Board b
-        INNER JOIN BoardItems i ON  b.id = i.idBoard
+        LEFT JOIN BoardItems i ON  b.id = i.idBoard
         ORDER BY b.id
         ';
         $t = DB::select($sql);
@@ -34,9 +34,9 @@ class boardsController extends Controller
             if ( $name == null ) {
                 $name = new \stdClass();
                 $name->idBoard = $r->idBoard;
-                $name->input = new \stdClass();
-                $name->input->add = '';
-                $name->input->remove = '';
+                $name->input ='';// new \stdClass();
+                // $name->input->add = '';
+                // $name->input->remove = '';
                 $name->title = $r->BoardName;
                 $name->index = "0";
                 $name->items = [];
@@ -45,9 +45,9 @@ class boardsController extends Controller
                 array_push($res,$name);
                 $name = new \stdClass();
                 $name->idBoard = $r->idBoard;
-                $name->input = new \stdClass();
-                $name->input->add = '';
-                $name->input->remove = '';
+                $name->input = '' ;//new \stdClass();
+                // $name->input->add = '';
+                // $name->input->remove = '';
                 $name->title = $r->BoardName;
                 $name->index = "0";
                 $name->items = [];
@@ -61,6 +61,37 @@ class boardsController extends Controller
     {
         $datos = array("name"=>$data,"index"=>1,"idBoard"=>$board);
         $t = DB::table("BoardItems")->insert($datos);
+        $res = new \stdClass();
+        $res->status = "ok";
+        return response(json_encode( $res ), 200)->header('Access-Control-Allow-Origin', 'http://localhost:3000');
+    }
+
+    public function addBoard(Request $request,$board)
+    {
+        $datos = array("name"=>$board,'internalName' => mb_strtolower($board));
+        $t = DB::table("Board")->insert($datos);
+        $res = new \stdClass();
+        $res->status = "ok";
+        return response(json_encode( $res ), 200)->header('Access-Control-Allow-Origin', 'http://localhost:3000');
+    }
+
+    public function deleteItem(Request $request,$board,$item)
+    {
+
+        DB::table('BoardItems')->where([
+            ["idBoard","=",$board],
+            ['name',"=",$item]
+        ])->delete();
+        $res = new \stdClass();
+        $res->status = "ok";
+        return response(json_encode( $res ), 200)->header('Access-Control-Allow-Origin', 'http://localhost:3000');
+    }
+
+    public function deleteBoard(Request $request,$board)
+    {
+        DB::table('BoardItems')->where("idBoard","=",$board)->delete();
+        DB::table('Board')->where("id","=",$board)->delete();
+
         $res = new \stdClass();
         $res->status = "ok";
         return response(json_encode( $res ), 200)->header('Access-Control-Allow-Origin', 'http://localhost:3000');
