@@ -13,9 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//Route::middleware('auth:api')->get('/user', function (Request $request) {    return $request->user();});
 
 
 Route::get('boards','boardsController@index');
@@ -23,3 +21,15 @@ Route::post('saveItem/{board}/{data}','boardsController@saveItem');
 Route::post('deleteItem/{board}/{item}','boardsController@deleteItem');
 Route::post('addBoard/{board}','boardsController@addBoard');
 Route::post('deleteBoard/{board}','boardsController@deleteBoard');
+
+
+Route::any('tickets/{fecha}','ticketController@index');
+
+Route::post('nuevaCorrida/{fecha}','ticketController@nuevaCorrida');
+Route::post('nuevaCorrida/{fecha}/{rta}','ticketController@nuevaCorrida');
+Route::post('nuevaCorrida/{fecha}/{rta}/{vhc}','ticketController@nuevaCorrida');
+
+Route::post('storeTicket/{icr}/{client}/{sit}','ticketController@storeSit');
+
+Route::any('vehiculos','ticketController@getVehiculos');
+Route::any('rutas','ticketController@getRutas');
