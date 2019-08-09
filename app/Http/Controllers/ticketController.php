@@ -51,12 +51,11 @@ class ticketController extends Controller
     public function nuevaCorrida(Request $re,Carbon $fecha,$rta,$vhc)
     {
         $res = new \stdClass();
-        $res->status = $fecha;
-        $values = array("rta_id"=>$rta,"ecr_id"=>$rta,"vhc_id"=>$vhc,"crr_fecha"=>$fecha);
+        $res->status = "ok";
 
-        $res->values =  $values;
-
-        //$ins = DB:table("Corrida")->insert($values);
+        $values  = array(array("rta_id"=>$rta,"ecr_id"=>"1","vhc_id"=>$vhc,"crr_fecha"=>$fecha));
+        $ins = DB::table("transports.Corrida")->insert($values);
+        $res->idcorrida = $ins;
 
         return response(json_encode($res), 200)->header('Access-Control-Allow-Origin', 'http://localhost:3000');
     }
